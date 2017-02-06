@@ -19,7 +19,7 @@ function loadData() {
     var address = streetStr + ', ' + cityStr;
     $greeting.text('So you want to live at ' + address + '?');
     var streetviewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=600x400&location=' + address + '';
-    console.log(streetviewUrl);
+    //console.log(streetviewUrl);
     $body.append('<img class="bgimg" src="'+streetviewUrl+'">');
 
     //loading NY Times Articles
@@ -38,6 +38,25 @@ function loadData() {
         $nytHeaderElem.text('New York Times Articles Could Not Be Loaded');
     })
 
+    //load wiki links
+    var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + cityStr + '&format=json&callback=wikiCallback';
+
+    $.ajax({
+        url : wikiUrl,
+        dataType: "jsonp",
+        success: function(response){
+            var articleList = response[1];
+            //console.log(articleList);
+
+            for(var i = 0; i<articleList.length; i++){
+                var articleStr =  articleList[i];
+                //console.log(articleStr);
+                var url = 'http://en.wikipedia.org/wiki/' + articleStr ;
+                console.log(url);
+                $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
+            };
+        }
+    })
     return false;
 
 
